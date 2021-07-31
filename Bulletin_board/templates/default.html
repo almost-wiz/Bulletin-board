@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-darkreader-mode="dynamic" data-darkreader-scheme="dark">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>
+    {% block title %}
+    {% endblock title %}
+  </title>
+
+  <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/album/">
+  <meta name="darkreader" content="5dccb9930a53d86bbd7658c4d4da08fb">
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/scrolling-nav.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/4.12.0/bootstrap-social.min.css">
+</head>
+<body>
+    <header>
+      <div class="bg-dark collapse" id="navbarHeader" style="">
+        <div class="container">
+          <div class="row">
+
+            <div class="bg-dark p-4">
+              <h4 class="text-white">Menu</h4>
+              <h5>
+                <a class="text-white ml-3" href="/publications/create">Add publication</a>
+              </h5>
+              <h5>
+                <a class="text-white ml-3" href="/publications">My publications</a>
+              </h5>
+              <h5>
+                <a class="text-white ml-3" href="/responses">Responses to my publications</a>
+              </h5>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="navbar navbar-dark bg-dark box-shadow">
+        <div class="container d-flex justify-content-between">
+          <a href="/" class="navbar-brand d-flex align-items-center">
+            <strong>Game Warrior</strong>
+          </a>
+          {% if request.user.username %}
+            <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          {% else %}
+            <a class="text-white ml-3" href="/accounts/login">Log in system</a>
+          {% endif %}
+        </div>
+      </div>
+    </header>
+  <main role="main">
+    {% block section %}{% endblock section %}
+    {% block content %}{% endblock content %}
+  </main>
+
+
+</body>
+
+<!-- Bootstrap core JavaScript -->
+<script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+<script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+
+</html>

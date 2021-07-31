@@ -1,0 +1,55 @@
+{% extends 'default.html' %}
+
+{% block title %}Publications{% endblock %}
+
+
+{% block section %}
+  <section class="jumbotron text-center">
+    <div class="container">
+      <h1 class="jumbotron-heading">Game Warrior</h1>
+      <p class="lead text-muted">Internet resource for a fan server of one well-known MMORPG</p>
+      <p>
+        <a href="https://getbootstrap.com/docs/4.0/examples/album/#" class="btn btn-primary my-2">Main call to action</a>
+        <a href="https://getbootstrap.com/docs/4.0/examples/album/#" class="btn btn-secondary my-2">Secondary action</a>
+      </p>
+    </div>
+  </section>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="album py-5 bg-light">
+  <div class="container">
+
+    <div class="row">
+
+      {% for publication in publications %}
+        <div class="col-md-4">
+          <div class="card mb-4 box-shadow">
+            <img class="card-img-top" src="/media/{{ publication.preview_image }}" data-holder-rendered="true">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center">
+                <p class="card-text">{{ publication.title }}</p>
+                <p class="btn btn-primary">{{ publication.category }}</p>
+              </div>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <a class="btn btn-sm btn-outline-success" href="/publications/{{ publication.id }}">View</a>
+                  {% if request.user == publication.author %}
+                    <a class="btn btn-sm btn-outline-warning" href="/publications/{{ publication.id }}/edit">Edit</a>
+                    <a class="btn btn-sm btn-outline-danger" href="/publications/{{ publication.id }}/delete">Delete</a>
+                  {% endif %}
+                </div>
+                <small class="text-muted">{{ publication.date|date:"d-m-Y H:i" }}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

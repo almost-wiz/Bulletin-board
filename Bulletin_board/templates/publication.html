@@ -1,0 +1,35 @@
+{% extends 'default.html' %}
+
+{% block title %}{{ publication.title }}{% endblock title %}
+
+
+{% block section %}
+  <!-- In style condition which check preview image. If it is default, we change it on grey background color -->
+  <section class="jumbotron text-center" style="{% if publication.preview_image != 'uploads/preview-images/default.jpg' %}background: url('/media/{{ publication.preview_image }}') no-repeat center; background-size: 100%; opacity: 0.85{% else %}background-color: grey{% endif %}">
+    <div class="container">
+      <h1 class="jumbotron-heading text-white">{{ publication.title }}</h1>
+      <p class="lead text-white">{{ publication.date|date:'d-m-Y H:i' }}</p>
+      <p class="lead text-white">Author - {{ publication.author.username }}</p>
+      <p>
+        <a class="btn btn-success" href="/publications/{{ publication.id }}/respond">Respond</a>
+        {% if request.user == publication.author %}
+          <a class="btn btn-warning" href="/publications/{{ publication.id }}/edit">Edit</a>
+          <a class="btn btn-danger" href="/publications/{{ publication.id }}/delete">Delete</a>
+        {% endif %}
+      </p>
+    </div>
+  </section>
+{% endblock %}
+
+
+{% block content %}
+<div class="container" style="margin-top: 100px">
+  <div class="row">
+    <div class="col-lg-12">
+
+      {{ publication.text|safe }}
+
+    </div>
+  </div>
+</div>
+{% endblock content %}
