@@ -1,0 +1,52 @@
+{% extends 'default.html' %}
+
+{% block title %}Responses{% endblock %}
+
+
+{% block section %}
+  <section class="jumbotron text-center">
+    <div class="container">
+      <h1 class="jumbotron-heading">Responses for my posts</h1>
+      <p>
+        <a href="https://getbootstrap.com/docs/4.0/examples/album/#" class="btn btn-primary my-2">Main call to action</a>
+        <a href="https://getbootstrap.com/docs/4.0/examples/album/#" class="btn btn-secondary my-2">Secondary action</a>
+      </p>
+    </div>
+  </section>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="album py-5 bg-light">
+  <div class="container">
+
+    <div class="row">
+      {% for response in responses %}
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Publication</th>
+              <th>Sender</th>
+              <th>Date</th>
+              <th>Message</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{ response.on_publication.title }}</td>
+              <td>{{ response.sender.username }}</td>
+              <td>{{ response.date|date:"d-m-Y H:i" }}</td>
+              <td>{{ response.message }}</td>
+            </tr>
+          </tbody>
+        </table>
+      {% endfor %}
+    </div>
+    {% if is_paginated %}
+      {% include 'pagination.html' %}
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

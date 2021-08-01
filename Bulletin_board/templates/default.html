@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
-
   <title>
     {% block title %}
     {% endblock title %}
@@ -36,6 +35,10 @@
               <h5>
                 <a class="text-white ml-3" href="/responses">Responses to my publications</a>
               </h5>
+              <br>
+              <h5>
+                <a class="text-danger ml-3" href="/accounts/logout">Logout</a>
+              </h5>
             </div>
 
           </div>
@@ -47,9 +50,12 @@
             <strong>Game Warrior</strong>
           </a>
           {% if request.user.username %}
-            <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
+            <div>
+              <a class="btn btn-outline-secondary text-white">{{ request.user.username }}</a>
+              <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
             </button>
+            </div>
           {% else %}
             <a class="text-white ml-3" href="/accounts/login">Log in system</a>
           {% endif %}

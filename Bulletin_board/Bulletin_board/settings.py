@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+from easy_thumbnails.conf import Settings as thumbnail_settings
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -38,9 +39,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
     'ckeditor',
     'ckeditor_uploader',
+    'crispy_forms',
     'main',
+    'main.templatetags',
 ]
 
 MIDDLEWARE = [
@@ -60,6 +67,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR, 'templates'),
+            os.path.join(BASE_DIR, 'templates', 'allauth'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -134,7 +142,30 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Ckeditor
+SITE_ID = 1
+
+# Django-allauth
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_UNIQUE_USERNAME = True
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+ACCOUNT_EMAIL_VERIFICATION = False
+
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/publications/'
+
+# Django-crispy-forms
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# Django-ckeditor
 
 CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
 CKEDITOR_UPLOAD_PATH = 'uploads/materials/'
@@ -157,7 +188,7 @@ CKEDITOR_CONFIGS = {
             ['Table', 'Image', 'Link', 'Unlink'],
             ['Styles', 'Format', 'Font', 'FontSize'],
             ['TextColor', 'BGColor'],
-            ['Maximize',]
+            ['Maximize', ]
         ]
     }
 }

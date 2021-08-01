@@ -1,0 +1,60 @@
+﻿{% extends "account/base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="text-center">
+        <h2 style="margin-top: 50px">Sign Up</h2>
+        <p style="margin-bottom: 50px">Already have an account? <a href="{% url 'account_login' %}">Sign In</a></p>
+      </div>
+
+      <form method="POST" action="{% url 'account_signup' %}">
+
+        {% csrf_token %}
+        {% if form.errors %}
+          <div class="alert alert-warning">
+            <ul class="alert-message">
+              {% for field in form %}
+                {% for error in field.errors %}
+                  <li>{{ error }}</li>
+                {% endfor %}
+              {% endfor %}
+              {% for error in form.non_field_errors %}
+                <li>{{ error|escape }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+
+        <div class="form-group row">
+          <div class="col-sm-6">
+              {{ form.email|as_crispy_field }}
+          </div>
+          <div class="col-sm-6">
+            {{ form.username|as_crispy_field }}
+          </div>
+          <div class="col-sm-6">
+            {{ form.password1|as_crispy_field }}
+          </div>
+          <div class="col-sm-6">
+            {{ form.password2|as_crispy_field }}
+          </div>
+          <div class="col-sm-12 text-center">
+            <button type="submit" class="btn btn-primary">Sign Up</button>
+          </div>
+        </div>
+
+        {% if redirect_field_value %}
+          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+        {% endif %}
+
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
