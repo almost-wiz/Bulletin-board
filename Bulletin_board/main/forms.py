@@ -23,3 +23,16 @@ class ResponseForm(ModelForm):
     class Meta:
         model = Response
         fields = ['message']
+
+
+class MailingForm(forms.Form):
+
+    subject = forms.CharField(
+        required=True,
+        label='Subject',
+    )
+    message = forms.CharField(
+        widget=forms.Textarea,
+        required=True,
+        label='Message',
+    )

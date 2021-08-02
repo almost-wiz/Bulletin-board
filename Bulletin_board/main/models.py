@@ -20,11 +20,11 @@ class Publication(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'[{self.date.strftime("%d-%m-%Y %H:%M")}] {self.author.username} ~ {self.title}'
+        return f'[{self.date.strftime("%d-%m-%Y %H:%M")}] - {self.title}'
 
 
 class Response(models.Model):
-    sender = models.OneToOneField(User, on_delete=models.CASCADE)
+    sender = models.ForeignKey(User, on_delete=models.CASCADE)
     message = models.CharField(max_length=1024)
     date = models.DateTimeField(default=timezone.now)
     on_publication = models.ForeignKey(Publication, on_delete=models.CASCADE)

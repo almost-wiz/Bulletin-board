@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-from easy_thumbnails.conf import Settings as thumbnail_settings
+from .email_data import *
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -43,10 +43,11 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'django_filters',
     'ckeditor',
     'ckeditor_uploader',
     'crispy_forms',
-    'main',
+    'main.apps.MainConfig',
     'main.templatetags',
 ]
 
@@ -144,6 +145,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SITE_ID = 1
 
+# E-mail data
+
+EMAIL_HOST = email_host
+EMAIL_PORT = email_port
+EMAIL_HOST_USER = email_host_user
+EMAIL_HOST_PASSWORD = email_host_password
+EMAIL_USE_SSL = email_use_ssl
+DEFAULT_FROM_EMAIL = default_from_email
+
 # Django-allauth
 
 AUTHENTICATION_BACKENDS = [
@@ -156,7 +166,7 @@ ACCOUNT_UNIQUE_USERNAME = True
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
-ACCOUNT_EMAIL_VERIFICATION = False
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/publications/'

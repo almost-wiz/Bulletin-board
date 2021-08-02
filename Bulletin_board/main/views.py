@@ -1,8 +1,14 @@
 from django.views.generic import ListView, DetailView, DeleteView, UpdateView, CreateView
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
+from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import *
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
+from django.core.mail import send_mail
+from django.contrib.auth.models import User
+from Bulletin_board.email_data import default_from_email
 from .forms import *
+from .filters import *
 
 
 class PublicationsList(ListView):
@@ -23,6 +29,12 @@ class PublicationDelete(LoginRequiredMixin, DeleteView):
     template_name = 'publication_delete.html'
     queryset = Publication.objects.all()
     success_url = '/publications'
+
+    def get_object(self, **kwargs):
+        publication = Publication.objects.get(pk=self.kwargs.get('pk'))
+        if self.request.user != publication.author:
+            raise PermissionDenied
+        return publication
 
 
 class PublicationCreate(LoginRequiredMixin, CreateView):
@@ -53,7 +65,10 @@ class PublicationUpdate(LoginRequiredMixin, UpdateView):
     success_url = '/publications/'
 
     def get_object(self, **kwargs):
-        return Publication.objects.get(pk=self.kwargs.get('pk'))
+        publication = Publication.objects.get(pk=self.kwargs.get('pk'))
+        if self.request.user != publication.author:
+            raise PermissionDenied
+        return publication
 
 
 class ResponseCreate(LoginRequiredMixin, CreateView):
@@ -72,7 +87,8 @@ class ResponseCreate(LoginRequiredMixin, CreateView):
             return redirect('publication_detail', pk=publication.pk)
 
 
-class ResponsesList(ListView):
+class ResponsesFilter(LoginRequiredMixin, ListView):
+    filterset_class = ResponsesFilter
     model = Response
     template_name = 'responses.html'
     context_object_name = 'responses'
@@ -80,10 +96,48 @@ class ResponsesList(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        user_publications = Publication.objects.filter(author=self.request.user)
-        result = []
-        for publication in user_publications:
-            responses = self.model.objects.filter(on_publication=publication)
-            res_arr = [response for response in responses]
-            result.append(*res_arr) if responses else 0
-        return result
+        queryset = Response.objects.filter(on_publication__author=self.request.user, accepted=False)
+        self.filterset = self.filterset_class(self.request.GET, queryset=queryset, request=self.request)
+        return self.filterset.qs.distinct()
+
+    def get_context_data(self, **kwargs):
+        context = super(ResponsesFilter, self).get_context_data(**kwargs)
+        context['responses_length'] = self.filterset.qs.count()
+        context['filter'] = self.filterset_class(self.request.GET, queryset=self.get_queryset(), request=self.request)
+        return context
+
+
+@login_required
+def accept_response(request, **kwargs):
+    response = Response.objects.get(id=request.path.split('/')[-2])
+    response.accepted = True
+    response.save()
+
+    return redirect('/responses')
+
+
+@login_required
+def delete_response(request, **kwargs):
+    response = Response.objects.get(id=request.path.split('/')[-2])
+    response.delete()
+
+    return redirect('/responses')
+
+
+def contact_view(request):
+    if not request.user.is_staff:
+        raise PermissionDenied
+
+    if request.method == 'GET':
+        form = MailingForm()
+    elif request.method == 'POST':
+        form = MailingForm(request.POST)
+        if form.is_valid():
+            subject = form.cleaned_data['subject']
+            message = form.cleaned_data['message']
+            for user in User.objects.all():
+                send_mail(subject, message, default_from_email, [user.email])
+            return redirect('publications/')
+    else:
+        raise ObjectDoesNotExist
+    return render(request, "mailing.html", {'form': form})

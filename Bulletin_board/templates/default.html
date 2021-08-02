@@ -30,11 +30,13 @@
                 <a class="text-white ml-3" href="/publications/create">Add publication</a>
               </h5>
               <h5>
-                <a class="text-white ml-3" href="/publications">My publications</a>
-              </h5>
-              <h5>
                 <a class="text-white ml-3" href="/responses">Responses to my publications</a>
               </h5>
+              {% if request.user.is_staff %}
+                <h5>
+                  <a class="text-white ml-3" href="/mailing">Users mailing</a>
+                </h5>
+              {% endif %}
               <br>
               <h5>
                 <a class="text-danger ml-3" href="/accounts/logout">Logout</a>

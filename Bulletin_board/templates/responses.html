@@ -1,47 +1,79 @@
 {% extends 'default.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block title %}Responses{% endblock %}
 
 
 {% block section %}
   <section class="jumbotron text-center">
     <div class="container">
-      <h1 class="jumbotron-heading">Responses for my posts</h1>
-      <p>
-        <a href="https://getbootstrap.com/docs/4.0/examples/album/#" class="btn btn-primary my-2">Main call to action</a>
-        <a href="https://getbootstrap.com/docs/4.0/examples/album/#" class="btn btn-secondary my-2">Secondary action</a>
-      </p>
+      <h1 class="jumbotron-heading">Responses for your publications</h1>
+      <p class="lead text-muted">In total - {{ responses_length }}</p>
     </div>
   </section>
 {% endblock %}
 
 
 {% block content %}
+{% if responses %}
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <form method="get">
+          <div class="col-lg-12 row">
+            <div class="col-sm-10">
+              {{ filter.form|crispy }}
+            </div>
+            <div class="col-sm-2">
+              <label for="input"> </label>
+              <input type="submit" id="input" class="btn btn-primary form-control" value="Search">
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
 
 <div class="album py-5 bg-light">
   <div class="container">
 
     <div class="row">
-      {% for response in responses %}
-        <table class="table">
+      {% if responses %}
+        <table class="table table-bordered table-hover">
           <thead>
             <tr>
               <th>Publication</th>
               <th>Sender</th>
               <th>Date</th>
               <th>Message</th>
+              <th colspan="2">Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>{{ response.on_publication.title }}</td>
-              <td>{{ response.sender.username }}</td>
-              <td>{{ response.date|date:"d-m-Y H:i" }}</td>
-              <td>{{ response.message }}</td>
-            </tr>
+            {% for response in responses %}
+              <tr>
+                <td>{{ response.on_publication.title }}</td>
+                <td>{{ response.sender.username }}</td>
+                <td>{{ response.date|date:"d-m-Y H:i" }}</td>
+                <td>{{ response.message }}</td>
+                <td>
+                  <a href="/responses/{{ response.id }}/accept" class="btn btn-outline-success">Accept</a>
+                </td>
+                <td>
+                  <a href="/responses/{{ response.id }}/delete" class="btn btn-outline-danger">Delete</a>
+                </td>
+              </tr>
+            {% endfor %}
           </tbody>
         </table>
-      {% endfor %}
+      {% else %}
+        <div class="text-center w-100">
+          <h4>There is nothing here yet</h4>
+        </div>
+      {% endif %}
     </div>
     {% if is_paginated %}
       {% include 'pagination.html' %}

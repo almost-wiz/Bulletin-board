@@ -10,5 +10,8 @@ urlpatterns = [
     path('publications/<int:pk>/edit', PublicationUpdate.as_view(), name='publication_update'),
     path('publications/<int:pk>/delete', PublicationDelete.as_view()),
     path('publications/<int:pk>/respond', ResponseCreate.as_view()),
-    path('responses', ResponsesList.as_view())
+    path('responses', ResponsesFilter.as_view()),
+    path('responses/<int:pk>/accept', accept_response),
+    path('responses/<int:pk>/delete', delete_response),
+    path('mailing', contact_view),
 ]
